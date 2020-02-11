@@ -1,5 +1,6 @@
 from functools import total_ordering
-
+import str_worker
+import common_part
 @total_ordering
 class Version:
 
@@ -27,51 +28,23 @@ class Version:
     def __lt__(self,other):
         
         
-        extra_splitted_list1=Version.extra_split(self.version)
-        extra_splitted_list2=Version.extra_split(other.version)
-        ready_for_operations_list1=Version.to_numbers_format(extra_splitted_list1)
-        ready_for_operations_list2=Version.to_numbers_format(extra_splitted_list2)
+        extra_splitted_list1=str_worker.extra_split(self.version)
+        extra_splitted_list2=str_worker.extra_split(other.version)
+        ready_for_operations_list1=str_worker.to_numbers_format(extra_splitted_list1)
+        ready_for_operations_list2=str_worker.to_numbers_format(extra_splitted_list2)
         
        
-        if len(ready_for_operations_list1)==len( ready_for_operations_list2) and Version.common_part_less(ready_for_operations_list1, ready_for_operations_list2):
+        if len(ready_for_operations_list1)==len( ready_for_operations_list2) and common_part.common_part_less(ready_for_operations_list1, ready_for_operations_list2):
         
             return True
-        elif len(ready_for_operations_list1)<len(ready_for_operations_list2) and Version.common_part_equal( ready_for_operations_list1, ready_for_operations_list2):
+        elif len(ready_for_operations_list1)<len(ready_for_operations_list2) and common_part.common_part_equal( ready_for_operations_list1, ready_for_operations_list2):
             
             return True
 
         
-    def extra_split(version):
-        splitted_list=[]
-        for vers_step in version:
-            
-            for split_step in vers_step.split("-"):
-                splitted_list.append(split_step)
-        return splitted_list       
-    def to_numbers_format(my_list):
-        prioriti_dict={
-        "alpha":0,
-        "beta":1,
-        "rc":2
-        }
-
-        to_numbers_list=[]
-
-        for list_step in my_list:
-            if prioriti_dict.get(list_step)!=None:
-                to_numbers_list.append(str(prioriti_dict.get(list_step)))
-            else:
-                to_numbers_list.append(list_step)
-        return to_numbers_list
    
-    def common_part_less(list1,list2):
-            for list_step_1, list_step_2 in zip(list1, list2):
-                if list_step_1<list_step_2:
-                    return True
-    def common_part_equal(list1,list2):
-            for list_step_1, list_step_2 in zip(list1, list2):
-                if list_step_1==list_step_2:
-                    return True
+   
+    
     
    
 
@@ -88,8 +61,7 @@ def main():
     ]
 
     for version_1, version_2 in to_test:
-        print(version_1)
-        print(version_2)
+        
         
         assert Version(version_1) < Version(version_2), 'lt failed'
         assert Version(version_2) > Version(version_1), 'gt failed'
